@@ -5,7 +5,7 @@ export default function NavBar({ buttons }: NavBarProps) {
   return (
     <div>
       {buttons.map((btnProps) => (
-        <NavButton {...btnProps} />
+        <NavButton key={`nav_to_${btnProps.linkTo}`} {...btnProps} />
       ))}
     </div>
   );

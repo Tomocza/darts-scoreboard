@@ -1,0 +1,3 @@
+import GameScoreboardNewThrowSetForm from "./GameScoreboardNewThrowSetForm";
+
+export default GameScoreboardNewThrowSetForm

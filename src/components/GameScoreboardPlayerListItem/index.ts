@@ -1,0 +1,3 @@
+import GameScoreboardPlayerListItem from "./GameScoreboardPlayerListItem";
+
+export default GameScoreboardPlayerListItem
