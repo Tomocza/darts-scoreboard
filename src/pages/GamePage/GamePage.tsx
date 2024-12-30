@@ -3,7 +3,12 @@ import { GameData, GameState, PlayerData, ThrowData, ThrowSetData, ThrowSetEval 
 import GameSetupAddPlayerForm from '../../components/GameSetupAddPlayerForm';
 import GameSetupPlayerListItem from '../../components/GameSetupPlayerListItem';
 import GameScoreboardPlayerList from '../../components/GameScoreboardPlayerList';
-import { getCurrentPlayer, getThrowSetEvaluation } from '../../utils';
+import {
+  getCurrentPlayer,
+  getThrowSetEvaluation,
+  getThrowSetValue,
+  getThrowValue,
+} from '../../utils';
 import GameScoreboardNewThrowSetForm from '../../components/GameScoreboardNewThrowSetForm';
 
 export default function GamePage() {
@@ -69,8 +74,8 @@ export default function GamePage() {
     pdata.throws.push(newThrowSet);
     if (throwEval === ThrowSetEval.Winning) newGame.state = GameState.Completed;
     else {
-      newGame.currPlayerIdx++
-      newGame.currPlayerIdx %= newGame.players.length
+      newGame.currPlayerIdx++;
+      newGame.currPlayerIdx %= newGame.players.length;
     }
     setGame(newGame);
   };
@@ -85,7 +90,42 @@ export default function GamePage() {
   };
 
   const renderCompletedGame = () => {
-    return <div>this is when the game is done.</div>;
+    const winner = getCurrentPlayer(game);
+
+    return (
+      <div>
+        <button
+          onClick={() => {
+            const newGame = createNewGame();
+            setGame(newGame);
+          }}
+        >
+          New game
+        </button>
+        <div>Winner!</div>
+        <div>{winner.name}</div>
+        <thead>
+          <tr>
+            <th>Round</th>
+            <th>#1</th>
+            <th>#2</th>
+            <th>#3</th>
+            <th>Sum</th>
+          </tr>
+        </thead>
+        <tbody>
+          {winner.throws?.map((tsdata, idx) => (
+            <tr>
+              <th>{`#${idx + 1}`}</th>
+              <td>{getThrowValue(tsdata.t1)}</td>
+              <td>{getThrowValue(tsdata.t2)}</td>
+              <td>{getThrowValue(tsdata.t3)}</td>
+              <td>{getThrowSetValue(tsdata)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </div>
+    );
   };
 
   switch (game.state) {
