@@ -14,7 +14,14 @@ export default function GameSetupAddPlayerForm({ handleSubmit }: Props) {
 
   return (
     <div>
-      <input type="text" value={name} onChange={(event) => setName(event.target.value)} />
+      <input
+        type="text"
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') addOnClick();
+        }}
+      />
       <button onClick={() => addOnClick()}>Add</button>
     </div>
   );

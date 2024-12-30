@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ThrowData, ThrowMult } from '../../pages/GamePage/types';
 
 interface Props {
@@ -13,24 +13,93 @@ export default function GameScoreboardNewThrowSetForm({ handleSubmit }: Props) {
   const [throwInput3, setThrowInput3] = useState('');
   const [throwData3, setThrowData3] = useState<ThrowData | null>(null);
 
+  const inputRef1 = useRef<HTMLInputElement | null>(null);
+  const setButtonRef1 = useRef<HTMLButtonElement | null>(null);
+  const inputRef2 = useRef<HTMLInputElement | null>(null);
+  const setButtonRef2 = useRef<HTMLButtonElement | null>(null);
+  const inputRef3 = useRef<HTMLInputElement | null>(null);
+  const setButtonRef3 = useRef<HTMLButtonElement | null>(null);
+
+  const resetThrowInputs = () => {
+    setThrowInput1('');
+    setThrowData1(null);
+    setThrowInput2('');
+    setThrowData2(null);
+    setThrowInput3('');
+    setThrowData3(null);
+  };
+
   return (
     <div>
       <div>
         <div>Value: {JSON.stringify(throwData1)}</div>
-        <input value={throwInput1} onChange={(event) => setThrowInput1(event.target.value)} />
-        <button onClick={() => setThrowData1(inputStringToThrowData(throwInput1))}>Set</button>
+        <input
+          autoFocus
+          ref={inputRef1}
+          value={throwInput1}
+          onChange={(event) => setThrowInput1(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') setButtonRef1.current?.click();
+          }}
+        />
+        <button
+          ref={setButtonRef1}
+          onClick={() => {
+            setThrowData1(inputStringToThrowData(throwInput1));
+            inputRef2.current?.focus();
+          }}
+        >
+          Set
+        </button>
       </div>
       <div>
         <div>Value: {JSON.stringify(throwData2)}</div>
-        <input value={throwInput2} onChange={(event) => setThrowInput2(event.target.value)} />
-        <button onClick={() => setThrowData2(inputStringToThrowData(throwInput2))}>Set</button>
+        <input
+          ref={inputRef2}
+          value={throwInput2}
+          onChange={(event) => setThrowInput2(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') setButtonRef2.current?.click();
+          }}
+        />
+        <button
+          ref={setButtonRef2}
+          onClick={() => {
+            setThrowData2(inputStringToThrowData(throwInput2));
+            inputRef3.current?.focus();
+          }}
+        >
+          Set
+        </button>
       </div>
       <div>
         <div>Value: {JSON.stringify(throwData3)}</div>
-        <input value={throwInput3} onChange={(event) => setThrowInput3(event.target.value)} />
-        <button onClick={() => setThrowData3(inputStringToThrowData(throwInput3))}>Set</button>
+        <input
+          ref={inputRef3}
+          value={throwInput3}
+          onChange={(event) => setThrowInput3(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') setButtonRef3.current?.click();
+          }}
+        />
+        <button
+          ref={setButtonRef3}
+          onClick={() => {
+            setThrowData3(inputStringToThrowData(throwInput3));
+          }}
+        >
+          Set
+        </button>
       </div>
-      <button onClick={() => handleSubmit(throwData1, throwData2, throwData3)}>Submit</button>
+      <button
+        onClick={() => {
+          handleSubmit(throwData1, throwData2, throwData3);
+          resetThrowInputs();
+          inputRef1.current?.focus()
+        }}
+      >
+        Submit
+      </button>
     </div>
   );
 }
@@ -44,7 +113,8 @@ function inputStringToThrowData(str: string): ThrowData {
   const multStr = match.groups!['mult'];
 
   const rawVal = parseInt(rawStr);
-  if (isNaN(rawVal) || rawVal < 0 || (rawVal > 20 && rawVal !== 25)) throw Error('Invalid throw raw value!');
+  if (isNaN(rawVal) || rawVal < 0 || (rawVal > 20 && rawVal !== 25))
+    throw Error('Invalid throw raw value!');
 
   let multVal: ThrowMult;
   switch (multStr) {
