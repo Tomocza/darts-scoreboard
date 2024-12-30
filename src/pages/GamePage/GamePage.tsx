@@ -68,6 +68,10 @@ export default function GamePage() {
     const pdata = getCurrentPlayer(newGame);
     pdata.throws.push(newThrowSet);
     if (throwEval === ThrowSetEval.Winning) newGame.state = GameState.Completed;
+    else {
+      newGame.currPlayerIdx++
+      newGame.currPlayerIdx %= newGame.players.length
+    }
     setGame(newGame);
   };
 
